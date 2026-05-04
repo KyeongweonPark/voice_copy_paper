@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "backend:install": "cd backend && uv venv --python 3.12 .venv && uv pip install -e .",
+    "backend:download-model": "cd backend && .venv/bin/hf download Qwen/Qwen3-TTS-12Hz-0.6B-Base --local-dir models/Qwen3-TTS-12Hz-0.6B-Base",
+    "backend:dev": "cd backend && .venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000",
     "dev": "next dev",
+    "dev:all": "npm run backend:dev & npm run dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "lucide-react": "^1.14.0",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -20,6 +25,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "playwright": "^1.59.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

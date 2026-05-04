@@ -1,0 +1,14 @@
+[project]
+name = "voice-studio-backend"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "fastapi>=0.115.0",
+  "huggingface-hub[cli]>=0.35.0",
+  "numpy>=1.26.0",
+  "python-multipart>=0.0.12",
+  "qwen-tts>=0.1.0",
+  "soundfile>=0.12.1",
+  "torch>=2.4.0",
+  "uvicorn[standard]>=0.30.0",
+]

@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Voice Studio
 
-## Getting Started
+React, Next.js, and a local FastAPI backend for consent-based voice sample recording and local TTS synthesis.
 
-First, run the development server:
+## Model Download
+
+The backend uses the public Hugging Face model [`Qwen/Qwen3-TTS-12Hz-0.6B-Base`](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base).
+
+It was selected because it supports Korean voice cloning, runs locally, and is Apache-2.0 licensed. The downloaded model directory is about 2.3GB:
+
+- `model.safetensors`: about 1.7GB
+- `speech_tokenizer/model.safetensors`: about 651MB
+
+Model files live in `backend/models/` and are intentionally ignored by Git. Do not commit model weights to GitHub.
+
+Download the model after installing the backend environment:
+
+```bash
+npm run backend:download-model
+```
+
+That script runs:
+
+```bash
+cd backend
+.venv/bin/hf download Qwen/Qwen3-TTS-12Hz-0.6B-Base \
+  --local-dir models/Qwen3-TTS-12Hz-0.6B-Base
+```
+
+The backend also accepts `QWEN_TTS_MODEL` if you want to point to another local model directory or Hugging Face model id.
+
+## Setup
+
+```bash
+npm install
+npm run backend:install
+npm run backend:download-model
+```
+
+The Qwen runtime expects system `ffmpeg` and `sox` binaries.
+
+On macOS:
+
+```bash
+brew install ffmpeg sox
+```
+
+## Run
+
+Start the local TTS server:
+
+```bash
+npm run backend:dev
+```
+
+Start the Next.js app in another terminal:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Local API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `POST http://localhost:8000/analyze`: uploads a reference audio sample and transcript, normalizes it to WAV, and returns a `sessionId`.
+- `POST http://localhost:8000/synthesize`: runs Qwen3-TTS locally with the analyzed voice session and returns a WAV file.
 
-## Learn More
+No external TTS API is used.
 
-To learn more about Next.js, take a look at the following resources:
+## GitHub Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Large generated files are excluded from Git:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `backend/models/`
+- `backend/.venv/`
+- `backend/storage/`
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Clone the repository, run the setup commands, and download the model from Hugging Face locally before starting the backend.

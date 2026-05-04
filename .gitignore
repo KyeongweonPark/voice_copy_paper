@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+backend/.venv/
+backend/*.egg-info/
+backend/__pycache__/
 /.pnp
 .pnp.*
 .yarn/*
@@ -23,6 +26,8 @@
 # misc
 .DS_Store
 *.pem
+backend/models/
+backend/storage/
 
 # debug
 npm-debug.log*
